@@ -212,7 +212,7 @@ export async function getCloudinaryImageMetadata(
 			`https://api.cloudinary.com/v1_1/${config.cloudName}/resources/image/upload/${publicId}`,
 			{
 				headers: {
-					Authorization: `Basic ${btoa(`${config.apiKey}:${config.apiSecret}`)}`,
+					Authorization: `Basic ${Buffer.from(`${config.apiKey}:${config.apiSecret}`).toString("base64")}`,
 				},
 			},
 		);
@@ -268,7 +268,7 @@ export async function listCloudinaryImages(folderPath: string): Promise<
 			`https://api.cloudinary.com/v1_1/${config.cloudName}/resources/image/upload?prefix=${encodeURIComponent(prefix)}&max_results=500`,
 			{
 				headers: {
-					Authorization: `Basic ${btoa(`${config.apiKey}:${config.apiSecret}`)}`,
+					Authorization: `Basic ${Buffer.from(`${config.apiKey}:${config.apiSecret}`).toString("base64")}`,
 				},
 			},
 		);
