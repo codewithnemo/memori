@@ -14,7 +14,8 @@ A static photo gallery website built with [Astro](https://astro.build).
 - [x] Responsive design
 - [x] Photo gallery with timeline view
 - [x] Image lightbox with [Fancybox](https://fancyapps.com/)
-- [x] Automatic image optimization
+- [x] Cloudinary integration for image storage and optimization
+- [x] Automatic image optimization and transformation
 - [x] Gallery metadata (location, camera, date)
 
 ## 🚀 Getting Started
@@ -31,44 +32,94 @@ A static photo gallery website built with [Astro](https://astro.build).
    ```
    - Install [pnpm](https://pnpm.io) `npm install -g pnpm` if you haven't.
 
-3. Edit the config file `src/config.ts` to customize your gallery website.
+3. Set up Cloudinary:
+   - Sign up for a free account at [Cloudinary](https://cloudinary.com/)
+   - Get your Cloudinary credentials from the dashboard
+   - Create a `.env` file in the project root with the following variables:
+     ```env
+     PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+     CLOUDINARY_API_KEY=your_api_key
+     CLOUDINARY_API_SECRET=your_api_secret
+     ```
+     Or use the `CLOUDINARY_URL` format:
+     ```env
+     CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
+     ```
 
-4. Run `pnpm new-gallery <gallery-name>` to create a new gallery and add images to `src/content/galleries/<gallery-name>/`.
+4. Edit the config file `src/config.ts` to customize your gallery website.
 
-5. Deploy your gallery to Vercel, Netlify, GitHub Pages, etc. following [the guides](https://docs.astro.build/en/guides/deploy/). You need to edit the site configuration in `astro.config.mjs` before deployment.
+5. Create a new gallery:
+   ```sh
+   pnpm new-gallery <gallery-name>
+   ```
+   This creates a gallery entry in `src/content/galleries/<gallery-name>/index.md`.
+
+6. Upload images to Cloudinary:
+   - Add your images to a local folder (e.g., `galleries/<gallery-name>/`)
+   - Upload them to Cloudinary using the upload script:
+     ```sh
+     pnpm upload-cloudinary <gallery-name>
+     ```
+     Or upload all galleries:
+     ```sh
+     pnpm upload-cloudinary
+     ```
+   - Or upload manually via Cloudinary dashboard to the folder `galleries/<gallery-name>/`
+
+7. Deploy your gallery to Vercel, Netlify, GitHub Pages, etc. following [the guides](https://docs.astro.build/en/guides/deploy/). 
+   - Remember to set the Cloudinary environment variables in your deployment platform
+   - Edit the site configuration in `astro.config.mjs` before deployment
 
 ## 📝 Frontmatter of Galleries
 
-Create a gallery by adding a folder in `src/content/galleries/` with an `index.md` file:
+Create a gallery by running:
+```sh
+pnpm new-gallery <gallery-name>
+```
+
+Or manually create a folder in `src/content/galleries/` with an `index.md` file:
 
 ```yaml
 ---
 title: My Gallery Title
 published: 2026-01-01
 description: Description of this gallery
-image: cover.jpg  # Optional: cover image filename (or leave empty to use first image)
+image: cover.jpg  # Optional: cover image filename from Cloudinary (or leave empty to use first image)
 location: "City, Country"  # Optional
 camera: "Canon EOS R5"  # Optional
 ---
 ```
 
-Then add your images (JPG, PNG, WEBP) to the same folder. The gallery will automatically display all images.
+**Important:** Images are stored on Cloudinary, not locally. Upload images to Cloudinary in the folder `galleries/<gallery-name>/`. The gallery will automatically fetch and display all images from the corresponding Cloudinary folder.
+
+### Uploading Images to Cloudinary
+
+1. **Using the upload script (recommended):**
+   - Place your images in a local folder (e.g., `galleries/<gallery-name>/`)
+   - Run: `pnpm upload-cloudinary <gallery-name>` (or `pnpm upload-cloudinary` to upload all galleries)
+   - Images will be uploaded to Cloudinary with the correct folder structure
+
+2. **Manual upload via Cloudinary Dashboard:**
+   - Upload images to Cloudinary
+   - Ensure they are in the folder `galleries/<gallery-name>/`
+   - The `public_id` should include the folder path (e.g., `galleries/gallery1/image.jpg`)
 
 ## ⚡ Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                    | Action                                              |
-|:---------------------------|:----------------------------------------------------|
-| `pnpm install`             | Installs dependencies                               |
-| `pnpm dev`                 | Starts local dev server at `localhost:4321`         |
-| `pnpm build`               | Build your production site to `./dist/`             |
-| `pnpm preview`             | Preview your build locally, before deploying        |
-| `pnpm check`               | Run checks for errors in your code                  |
-| `pnpm format`              | Format your code using Biome                        |
-| `pnpm new-gallery <name>`  | Create a new gallery                                |
-| `pnpm astro ...`           | Run CLI commands like `astro add`, `astro check`    |
-| `pnpm astro --help`        | Get help using the Astro CLI                        |
+| Command                                         | Action                                              |
+|:------------------------------------------------|:----------------------------------------------------|
+| `pnpm install`                                  | Installs dependencies                               |
+| `pnpm dev`                                      | Starts local dev server at `localhost:4321`         |
+| `pnpm build`                                    | Build your production site to `./dist/`             |
+| `pnpm preview`                                  | Preview your build locally, before deploying        |
+| `pnpm check`                                    | Run checks for errors in your code                  |
+| `pnpm format`                                   | Format your code using Biome                        |
+| `pnpm new-gallery <name>`                       | Create a new gallery                                |
+| `pnpm upload-cloudinary [name]`                 | Upload images to Cloudinary (optionally for a specific gallery) |
+| `pnpm astro ...`                                | Run CLI commands like `astro add`, `astro check`    |
+| `pnpm astro --help`                             | Get help using the Astro CLI                        |
 
 ## 📄 License
 
