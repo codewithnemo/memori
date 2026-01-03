@@ -1,0 +1,25 @@
+---
+import GalleryCard from "../components/GalleryCard.astro";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { getGalleries } from "../utils/gallery-utils";
+
+const galleries = await getGalleries();
+
+let delay = 0;
+const interval = 50;
+---
+
+<MainGridLayout>
+    {galleries.length > 0 && (
+        <div class="transition flex flex-col rounded-[var(--radius-large)] bg-[var(--card-bg)] py-1 md:py-0 md:bg-transparent md:gap-4 mb-4">
+            {galleries.map((gallery) => (
+                <GalleryCard
+                    gallery={gallery}
+                    class:list="onload-animation"
+                    style={`animation-delay: calc(var(--content-delay) + ${50 + (delay++ * interval)}ms);`}
+                ></GalleryCard>
+            ))}
+        </div>
+    )}
+</MainGridLayout>
+

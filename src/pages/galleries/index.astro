@@ -1,0 +1,16 @@
+---
+import GalleryArchivePanel from "../../components/GalleryArchivePanel.svelte";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+import MainGridLayout from "../../layouts/MainGridLayout.astro";
+import { getSortedGalleriesList } from "../../utils/gallery-utils";
+
+const sortedGalleriesList = await getSortedGalleriesList();
+---
+
+<MainGridLayout title={i18n(I18nKey.adventures)}>
+    <div data-pagefind-body>
+        <GalleryArchivePanel sortedGalleries={sortedGalleriesList} client:only="svelte"></GalleryArchivePanel>
+    </div>
+</MainGridLayout>
+
