@@ -32,6 +32,9 @@ importers:
       '@expressive-code/plugin-line-numbers':
         specifier: ^0.41.5
         version: 0.41.5
+      '@fancyapps/ui':
+        specifier: ^6.1.7
+        version: 6.1.7
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.2.8
         version: 5.2.8
@@ -1085,6 +1088,9 @@ packages:
 
   '@expressive-code/plugin-text-markers@0.41.5':
     resolution: {integrity: sha512-0DSiTsjWFEz6/iuLOGNNy2GaeCW41OwnVJMKx1tS+XKeQxAL89UkZP3egWNzxjWNHNMzEv3ZWWWYqbonEQlv/Q==}
+
+  '@fancyapps/ui@6.1.7':
+    resolution: {integrity: sha512-KHOvuy90JBFDgbNa2V1N9Jg7PE/lSQMXN9VbhR+WQSIxIEi4PV7kndeao7ezir5WeJ8OZRyDelNKJVLicXfBIg==}
 
   '@fontsource-variable/jetbrains-mono@5.2.8':
     resolution: {integrity: sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q==}
@@ -6326,6 +6332,8 @@ snapshots:
   '@expressive-code/plugin-text-markers@0.41.5':
     dependencies:
       '@expressive-code/core': 0.41.5
+
+  '@fancyapps/ui@6.1.7': {}
 
   '@fontsource-variable/jetbrains-mono@5.2.8': {}
 

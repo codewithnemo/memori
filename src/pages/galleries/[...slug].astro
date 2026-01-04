@@ -137,11 +137,10 @@ const imagesToPreload = imageEntries.slice(0, 20);
 		<section class="justified-gallery" id="gallery">
 			{imageEntries.map(({ thumbnailSrc, originalSrc, width, height }, index) => (
 				<a
-					style={`--width: ${width || 400}; --height: ${height || 400};`}
 					href={originalSrc}
-					data-pswp-width={width || 400}
-					data-pswp-height={height || 400}
-					data-cropped="true"
+					data-fancybox="gallery"
+					data-src={originalSrc}
+					data-caption={`${galleryTitle} - ${entry.data.description || ''}`}
 					class="gallery-image-link">
 					<img
 						src={thumbnailSrc}
