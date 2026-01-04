@@ -272,13 +272,14 @@ function setClickOutsideToClose(panel: string, ignores: string[]) {
 		let panelDom = document.getElementById(panel);
 		let tDom = event.target;
 		if (!(tDom instanceof Node)) return;		// Ensure the event target is an HTML Node
+		if (!panelDom) return;		// Panel doesn't exist on this page
 		for (let ig of ignores) {
 			let ie = document.getElementById(ig)
 			if (ie == tDom || (ie?.contains(tDom))) {
 				return;
 			}
 		}
-		panelDom!.classList.add("float-panel-closed");
+		panelDom.classList.add("float-panel-closed");
 	});
 }
 setClickOutsideToClose("display-setting", ["display-setting", "display-settings-switch"])
@@ -514,9 +515,15 @@ window.onresize = () => {
 </script>
 
 <script>
+// Load PhotoSwipe for Markdown images
 import PhotoSwipeLightbox from "photoswipe/lightbox"
 import "photoswipe/style.css"
 
+// Load Fancybox for Gallery images
+import { Fancybox } from "@fancyapps/ui"
+import "@fancyapps/ui/dist/fancybox/fancybox.css"
+
+// --- PhotoSwipe Setup (for Markdown Content) ---
 let lightbox: PhotoSwipeLightbox
 let pswp = import("photoswipe")
 
@@ -538,38 +545,65 @@ function createPhotoSwipe() {
 	lightbox.addFilter("domItemData", (itemData, element) => {
 		if (element instanceof HTMLImageElement) {
 			itemData.src = element.src
-
 			itemData.w = Number(element.naturalWidth || window.innerWidth)
 			itemData.h = Number(element.naturalHeight || window.innerHeight)
-
 			itemData.msrc = element.src
 		}
-
 		return itemData
 	})
 
 	lightbox.init()
 }
 
-const setup = () => {
-	if (!lightbox) {
-		createPhotoSwipe()
-	}
-	window.swup.hooks.on("page:view", () => {
-		createPhotoSwipe()
-	})
-
-	window.swup.hooks.on(
-		"content:replace",
-		() => {
-			lightbox?.destroy?.()
+// --- Fancybox Setup (for Gallery Pages) ---
+function initFancybox() {
+	Fancybox.bind("[data-fancybox]", {
+		// Custom options
+		Carousel: {
+			infinite: true,
 		},
-		{ before: true },
-	)
+		Thumbs: {
+			autoStart: false,
+		},
+		Toolbar: {
+			display: {
+				left: ["infobar"],
+				middle: [],
+				right: ["slideshow", "thumbs", "close"],
+			},
+		},
+		Image: {
+			zoom: true,
+		},
+	} as any);
+}
+
+// --- Global Init ---
+const setup = () => {
+	// 1. PhotoSwipe (clean up old first)
+	if (lightbox) {
+		lightbox.destroy()
+	}
+	createPhotoSwipe()
+
+	// 2. Fancybox (it handles its own binding, but good to re-run on nav)
+	// We destroy old bindings implicitly by re-binding or rely on Fancybox checking
+	// But Fancybox.bind attaches to selector. If new content appears matching selector, 
+	// we just need to run bind again or rely on delegation if Fancybox uses it (it does).
+	// However, forcing re-bind ensures settings are fresh.
+	Fancybox.unbind("[data-fancybox]");
+	Fancybox.close(); // Close any open instance
+	initFancybox();
 }
 
 if (window.swup) {
 	setup()
+	window.swup.hooks.on("page:view", () => {
+		setup()
+	})
+	window.swup.hooks.on("content:replace", () => {
+		// Cleanup if needed
+	}, { before: true })
 } else {
 	document.addEventListener("swup:enable", setup)
 }

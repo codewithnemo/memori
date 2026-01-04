@@ -27,7 +27,7 @@ html.is-animating .transition-swup-fade {
 #navbar {
     animation-delay: 0ms
 }
-#sidebar {
+#sidebar-sticky {
     animation-delay: 100ms
 }
 #swup-container {

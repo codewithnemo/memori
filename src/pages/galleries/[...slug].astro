@@ -8,7 +8,6 @@ import {
 	listCloudinaryImages,
 } from "../../utils/cloudinary-utils";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import "../../styles/gallery.css";
 
 export async function getStaticPaths() {
@@ -83,7 +82,7 @@ const imagesToPreload = imageEntries.slice(0, 20);
 						md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
 						before:absolute before:top-[0.75rem] before:left-[-1.125rem]
 						flex items-center gap-2
-					" data-pagefind-meta="title">
+						" data-pagefind-meta="title">
 						<Icon name="material-symbols:photo-library-rounded" class="text-2xl text-[var(--primary)]"></Icon>
 						{galleryTitle}
 					</h1>
@@ -135,24 +134,14 @@ const imagesToPreload = imageEntries.slice(0, 20);
 			</div>
 		</div>
 
-		<!-- <header class="gallery-header mb-8">
-			<h2 class="text-2xl font-bold mb-2">Photos</h2>
-			<p class="text-sm text-gray-600 dark:text-gray-400">
-				{imageEntries.length} {imageEntries.length === 1 ? "photo" : "photos"}
-			</p>
-		</header> -->
-
 		<section class="justified-gallery" id="gallery">
 			{imageEntries.map(({ thumbnailSrc, originalSrc, width, height }, index) => (
 				<a
-					style={`--width: ${width || 400}; --height: ${height || 400};`}
-					href="javascript:void(0);"
-					data-src={originalSrc}
+					href={originalSrc}
 					data-fancybox="gallery"
-					data-caption={`${galleryTitle} - Image ${index + 1} of ${imageEntries.length}`}
-					class="gallery-image-link"
-					onclick="return false;"
-				>
+					data-src={originalSrc}
+					data-caption={`${galleryTitle} - ${entry.data.description || ''}`}
+					class="gallery-image-link">
 					<img
 						src={thumbnailSrc}
 						alt={`${galleryTitle} - Image ${index + 1}`}
@@ -166,221 +155,4 @@ const imagesToPreload = imageEntries.slice(0, 20);
 		</section>
 	</article>
 </MainGridLayout>
-
-<script>
-	import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
-
-	// biome-ignore lint/suspicious/noExplicitAny: Fancybox types
-	const options: any = {
-		theme: "auto",
-		Toolbar: {
-			display: {
-				left: ["infobar"],
-				middle: [],
-				right: ["slideshow", "download", "thumbs", "close"],
-			},
-		},
-		Thumbs: {
-			autoStart: false,
-		},
-		Image: {
-			zoom: true,
-			wheel: "slide",
-			click: "toggleControls",
-		},
-		Carousel: {
-			Navigation: {
-				prevTpl: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>',
-				nextTpl: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>',
-			},
-			transition: "slide",
-			Panzoom: {
-				maxScale: 4,
-				step: 0.5,
-			},
-		},
-		on: {
-			loadError: (_fancybox: any, slide: any) => {
-				console.error("Fancybox load error:", slide.src);
-				// Log error for debugging large image issues
-			},
-			reveal: (_fancybox: any, slide: any) => {
-				if (slide.type === "image" && slide.$image) {
-					slide.$image.style.touchAction = "none";
-				}
-			},
-		},
-		mainStyle: {
-			"--f-button-width": "44px",
-			"--f-button-height": "44px",
-			"--f-button-border-radius": "50%",
-			"--f-toolbar-padding": "16px",
-		},
-	};
-
-	// Preload all gallery images in the background
-	function preloadGalleryImages() {
-		const galleryLinks = document.querySelectorAll<HTMLAnchorElement>("a[data-fancybox]");
-		const imageUrls: string[] = [];
-		
-		galleryLinks.forEach((link) => {
-			const src = link.getAttribute("data-src") || link.getAttribute("href");
-			if (src && src !== "#") {
-				imageUrls.push(src);
-			}
-		});
-
-		// Preload images one by one to avoid overwhelming the browser
-		imageUrls.forEach((url, index) => {
-			// Delay preload slightly to prioritize visible images
-			setTimeout(() => {
-				const img = new Image();
-				img.src = url;
-				// Optional: log when image is loaded
-				img.onload = () => {
-					if (index < 5) {
-						console.log(`Preloaded image ${index + 1}: ${url}`);
-					}
-				};
-				img.onerror = () => {
-					console.warn(`Failed to preload image: ${url}`);
-				};
-			}, index * 100); // Stagger preloads by 100ms
-		});
-	}
-
-	function initFancybox() {
-		const elements = document.querySelectorAll<HTMLAnchorElement>("[data-fancybox]");
-		
-		if (elements.length === 0) {
-			return;
-		}
-
-		if (!Fancybox) {
-			return;
-		}
-
-		try {
-			Fancybox.unbind("[data-fancybox]");
-			Fancybox.destroy();
-		} catch (e) {
-			// Ignore
-		}
-
-		const gallery = document.getElementById("gallery");
-		if (!gallery) {
-			return;
-		}
-
-		// Get all gallery links
-		const allLinks = Array.from(gallery.querySelectorAll<HTMLAnchorElement>("a[data-fancybox]"));
-		
-		// Create slides array once
-		const slides = allLinks.map((l) => {
-			const href = l.getAttribute("data-src") || l.getAttribute("href") || "";
-			// Ensure URL is absolute if needed
-			const src = href.startsWith("http") || href.startsWith("/") 
-				? href 
-				: new URL(href, window.location.origin).href;
-			return {
-				src: src,
-				type: "image" as const,
-				caption: l.getAttribute("data-caption") || ""
-			};
-		});
-
-		// Add click handler to each link directly
-		allLinks.forEach((link, index) => {
-			// Store handler reference to allow cleanup
-			const clickHandler = function(e: Event) {
-				e.preventDefault();
-				e.stopPropagation();
-				e.stopImmediatePropagation();
-				
-				Fancybox.show(slides, {
-					...options,
-					startIndex: index
-				});
-				
-				return false;
-			};
-			
-			// Remove old handler if exists
-			const oldHandler = (link as any).__fancyboxClickHandler;
-			if (oldHandler) {
-				link.removeEventListener("click", oldHandler);
-			}
-			
-			// Store and add new handler
-			(link as any).__fancyboxClickHandler = clickHandler;
-			link.addEventListener("click", clickHandler);
-		});
-
-		// Also add event delegation on gallery container to catch clicks on images
-		const oldGalleryHandler = (gallery as any).__fancyboxGalleryHandler;
-		if (oldGalleryHandler) {
-			gallery.removeEventListener("click", oldGalleryHandler, true);
-		}
-
-		const galleryClickHandler = function(e: Event) {
-			const target = e.target as HTMLElement;
-			const link = target.closest<HTMLAnchorElement>("a[data-fancybox]");
-			if (link) {
-				e.preventDefault();
-				e.stopPropagation();
-				e.stopImmediatePropagation();
-				
-				const currentIndex = allLinks.indexOf(link);
-				Fancybox.show(slides, {
-					...options,
-					startIndex: currentIndex
-				});
-				
-				return false;
-			}
-		};
-		
-		(gallery as any).__fancyboxGalleryHandler = galleryClickHandler;
-		gallery.addEventListener("click", galleryClickHandler, { capture: true, passive: false });
-	}
-
-	// Initialize when DOM is ready
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", () => {
-			setTimeout(initFancybox, 100);
-			// Start preloading images after a short delay
-			setTimeout(preloadGalleryImages, 500);
-		});
-	} else {
-		setTimeout(initFancybox, 100);
-		// Start preloading images after a short delay
-		setTimeout(preloadGalleryImages, 500);
-	}
-
-	// Handle Swup transitions
-	if (typeof window !== "undefined") {
-		const setupSwup = () => {
-			if ((window as any).swup?.hooks) {
-				(window as any).swup.hooks.on("page:view", () => {
-					setTimeout(initFancybox, 400);
-				});
-				
-				(window as any).swup.hooks.on("content:replace", () => {
-					try {
-						Fancybox.unbind("[data-fancybox]");
-						Fancybox.destroy();
-					} catch (e) {
-						// Ignore
-					}
-				}, { before: true });
-			}
-		};
-
-		if ((window as any).swup) {
-			setupSwup();
-		} else {
-			document.addEventListener("swup:enable", setupSwup);
-		}
-	}
-</script>
 
