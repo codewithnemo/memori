@@ -5,6 +5,10 @@
 
 A static photo gallery website built with [Astro](https://astro.build). Inspired from [Fuwari](https://github.com/saicaca/fuwari).
 
+[**🖥️ Live Demo (Github Pages)**](https://codewithnemo.github.io/memori)
+
+![Preview Image](./src/assets/images/demo.png)
+
 ## ✨ Features
 
 - [x] Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
@@ -118,6 +122,9 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm format`                                   | Format your code using Biome                        |
 | `pnpm new-gallery <name>`                       | Create a new gallery                                |
 | `pnpm upload-cloudinary [name]`                 | Upload images to Cloudinary (optionally for a specific gallery) |
+| `pnpm upload-cloudinary`                        | Upload all galleries to Cloudinary                  |
+| `pnpm convert-heic`                             | Convert HEIC images to JPEG                         |
+| `pnpm delete-heic`                              | Delete HEIC images                                  |
 | `pnpm astro ...`                                | Run CLI commands like `astro add`, `astro check`    |
 | `pnpm astro --help`                             | Get help using the Astro CLI                        |
 
