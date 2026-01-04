@@ -27,7 +27,6 @@
 		"@expressive-code/core": "^0.41.5",
 		"@expressive-code/plugin-collapsible-sections": "^0.41.5",
 		"@expressive-code/plugin-line-numbers": "^0.41.5",
-		"@fancyapps/ui": "^6.1.7",
 		"@fontsource-variable/jetbrains-mono": "^5.2.8",
 		"@fontsource/roboto": "^5.2.9",
 		"@iconify-json/fa6-brands": "^1.2.6",
