@@ -140,11 +140,11 @@ const imagesToPreload = imageEntries.slice(0, 20);
 					href={originalSrc}
 					data-fancybox="gallery"
 					data-src={originalSrc}
-					data-caption={`${galleryTitle} - ${entry.data.description || ''}`}
+					data-caption={`${galleryTitle}`}
 					class="gallery-image-link">
 					<img
 						src={thumbnailSrc}
-						alt={`${galleryTitle} - Image ${index + 1}`}
+						alt={`${galleryTitle}`}
 						width={width || 400}
 						height={height || 400}
 						loading={index < 20 ? "eager" : "lazy"}
