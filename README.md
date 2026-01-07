@@ -2,8 +2,11 @@
 
 ![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen) 
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue) 
+![Tailwind CSS v3](https://img.shields.io/badge/Tailwind_CSS-v3-38bdf8?logo=tailwind-css)
 
 A static photo gallery website built with [Astro](https://astro.build). Inspired from [Fuwari](https://github.com/saicaca/fuwari).
+
+> **Note:** This theme uses **Tailwind CSS v3** (not Tailwind v4). This is an intentional choice to maintain compatibility with the current configuration.
 
 [**🖥️ Live Demo (Github Pages)**](https://codewithnemo.github.io/memori)
 
@@ -11,7 +14,7 @@ A static photo gallery website built with [Astro](https://astro.build). Inspired
 
 ## ✨ Features
 
-- [x] Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com)
+- [x] Built with [Astro](https://astro.build) and [Tailwind CSS v3](https://tailwindcss.com) (Note: This theme uses Tailwind CSS v3, not Tailwind v4)
 - [x] Smooth animations and page transitions
 - [x] Light / dark mode
 - [x] Customizable theme colors & banner
