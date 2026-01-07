@@ -23,8 +23,10 @@ export async function getGalleries(): Promise<GalleryInfo[]> {
 
 	// Process galleries in parallel for better performance
 	const galleryPromises = galleryEntries.map(async (entry) => {
+		// Extract slug from id: "gallery1/index" -> "gallery1"
+		const slug = entry.id.replace(/\/index$/, "");
 		// Get images from Cloudinary API
-		const folderPath = `galleries/${entry.slug}`;
+		const folderPath = `galleries/${slug}`;
 		let cloudinaryImages: Array<{
 			public_id: string;
 			width: number;
@@ -55,7 +57,7 @@ export async function getGalleries(): Promise<GalleryInfo[]> {
 		// Convert local image path to Cloudinary URL if needed
 		if (finalImagePath && !finalImagePath.startsWith("http")) {
 			const publicId = localPathToCloudinaryPublicId(
-				`galleries/${entry.slug}/${finalImagePath}`,
+				`galleries/${slug}/${finalImagePath}`,
 			);
 			finalImagePath = buildCloudinaryThumbnailUrl(publicId, 600, 400);
 		} else if (!finalImagePath) {
@@ -63,8 +65,8 @@ export async function getGalleries(): Promise<GalleryInfo[]> {
 		}
 
 		return {
-			slug: entry.slug,
-			name: entry.slug,
+			slug,
+			name: slug,
 			title: entry.data.title,
 			imageCount,
 			published: entry.data.published,

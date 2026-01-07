@@ -12,10 +12,14 @@ import "../../styles/gallery.css";
 
 export async function getStaticPaths() {
 	const galleryEntries = await getCollection("galleries");
-	return galleryEntries.map((entry) => ({
-		params: { slug: entry.slug },
-		props: { entry },
-	}));
+	return galleryEntries.map((entry) => {
+		// Extract slug from id: "gallery1/index" -> "gallery1"
+		const slug = entry.id.replace(/\/index$/, "");
+		return {
+			params: { slug },
+			props: { entry },
+		};
+	});
 }
 
 const { entry } = Astro.props;

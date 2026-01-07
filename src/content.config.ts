@@ -1,9 +1,14 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 const specCollection = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/spec" }),
 	schema: z.object({}),
 });
+
 const galleriesCollection = defineCollection({
+	loader: glob({ pattern: "**/index.md", base: "./src/content/galleries" }),
 	schema: z.object({
 		title: z.string(),
 		published: z.date(),
@@ -14,10 +19,8 @@ const galleriesCollection = defineCollection({
 		camera: z.string().optional().default(""),
 	}),
 });
-export const collections: Record<
-	string,
-	ReturnType<typeof defineCollection>
-> = {
+
+export const collections = {
 	spec: specCollection,
 	galleries: galleriesCollection,
 };
