@@ -8,6 +8,9 @@ A static photo gallery website built with [Astro](https://astro.build). Inspired
 
 > **Note:** This theme uses **Tailwind CSS v3** (not Tailwind v4). This is an intentional choice to maintain compatibility with the current configuration.
 
+You can find the official Astro theme here:  
+https://astro.build/themes/details/a-static-photo-gallery-template-built-with-astro/
+
 [**🖥️ Live Demo (Github Pages)**](https://codewithnemo.github.io/memori)
 
 ![Preview Image](./src/assets/images/demo.png)
